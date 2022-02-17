@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Explore Compose</string>
+    <string name="greeting">Hello,</string>
+    <string name="show_more_button">Show more</string>
 </resources>
