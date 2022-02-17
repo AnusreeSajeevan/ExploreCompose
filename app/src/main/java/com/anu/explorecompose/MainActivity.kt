@@ -6,6 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,6 +39,13 @@ private fun MyApp(names: List<String> = listOf("World", "Compose")) {
 
 @Composable
 fun Greeting(name: String) {
+
+    val expanded = remember {
+        mutableStateOf(false)
+    }
+
+    val extraPadding = if (expanded.value) 56.dp else 0.dp
+
     Surface(
         color = MaterialTheme.colors.primary,
         modifier = Modifier
@@ -48,8 +57,15 @@ fun Greeting(name: String) {
                 Text(text = stringResource(R.string.greeting))
                 Text(text = name)
             }
-            OutlinedButton(onClick = { /*TODO*/ }) {
-                Text(text = stringResource(R.string.show_more_button))
+            OutlinedButton(onClick = {
+                expanded.value = !expanded.value
+            }, modifier = Modifier.padding(bottom = extraPadding)) {
+                Text(
+                    text = stringResource(
+                        if (expanded.value) R.string.show_less_button else
+                            R.string.show_more_button
+                    )
+                )
             }
         }
     }
