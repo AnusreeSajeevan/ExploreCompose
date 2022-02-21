@@ -5,9 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,7 +23,17 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-private fun MyApp(names: List<String> = listOf("World", "Compose")) {
+private fun MyApp() {
+    var shouldShowOnboarding by remember { mutableStateOf(true) }
+   if (shouldShowOnboarding) {
+       OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false })
+   } else {
+       Greetings()
+   }
+}
+
+@Composable
+fun Greetings(names: List<String> = listOf("World", "Compose")) {
     ExploreComposeTheme {
         Surface(
             color = MaterialTheme.colors.background
@@ -40,11 +49,11 @@ private fun MyApp(names: List<String> = listOf("World", "Compose")) {
 @Composable
 fun Greeting(name: String) {
 
-    val expanded = remember {
+    var expanded by remember {
         mutableStateOf(false)
     }
 
-    val extraPadding = if (expanded.value) 56.dp else 0.dp
+    val extraPadding = if (expanded) 56.dp else 0.dp
 
     Surface(
         color = MaterialTheme.colors.primary,
@@ -58,11 +67,11 @@ fun Greeting(name: String) {
                 Text(text = name)
             }
             OutlinedButton(onClick = {
-                expanded.value = !expanded.value
+                expanded = !expanded
             }, modifier = Modifier.padding(bottom = extraPadding)) {
                 Text(
                     text = stringResource(
-                        if (expanded.value) R.string.show_less_button else
+                        if (expanded) R.string.show_less_button else
                             R.string.show_more_button
                     )
                 )
@@ -76,5 +85,31 @@ fun Greeting(name: String) {
 fun DefaultPreview() {
     ExploreComposeTheme() {
         MyApp()
+    }
+}
+
+@Composable
+fun OnboardingScreen(onContinueClicked: () -> Unit) {
+    // TODO: This state should be hoisted
+
+    Surface {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text("Welcome to the Basics Codelab!")
+            Button(modifier = Modifier.padding(vertical = 24.dp), onClick = onContinueClicked) {
+                Text("Continue")
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true, widthDp = 320, heightDp = 320)
+@Composable
+fun OnboardingPreview() {
+    ExploreComposeTheme() {
+        OnboardingScreen(onContinueClicked = {})
     }
 }
