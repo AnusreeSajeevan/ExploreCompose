@@ -3,6 +3,9 @@ package com.anu.explorecompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -57,7 +60,8 @@ fun Greeting(name: String) {
         mutableStateOf(false)
     }
 
-    val extraPadding = if (expanded) 56.dp else 0.dp
+    val extraPadding by animateDpAsState(targetValue = if (expanded) 56.dp else 0.dp,
+    animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy, stiffness = Spring.StiffnessLow))
 
     Surface(
         color = MaterialTheme.colors.primary,
@@ -72,7 +76,7 @@ fun Greeting(name: String) {
             }
             OutlinedButton(onClick = {
                 expanded = !expanded
-            }, modifier = Modifier.padding(bottom = extraPadding)) {
+            }, modifier = Modifier.padding(bottom = extraPadding.coerceAtLeast(0.dp))) {
                 Text(
                     text = stringResource(
                         if (expanded) R.string.show_less_button else
