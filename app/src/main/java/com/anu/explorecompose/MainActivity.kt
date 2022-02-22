@@ -1,5 +1,6 @@
 package com.anu.explorecompose
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,8 +16,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.anu.explorecompose.ui.theme.BasicsCodelabTheme
 import com.anu.explorecompose.ui.theme.ExploreComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -40,7 +43,7 @@ private fun MyApp() {
 
 @Composable
 fun Greetings(names: List<String> = List(1000) {"$it"} ) {
-    ExploreComposeTheme {
+    BasicsCodelabTheme {
         Surface(
             color = MaterialTheme.colors.background
         ) {
@@ -72,7 +75,7 @@ fun Greeting(name: String) {
         Row(Modifier.padding(24.dp)) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(text = stringResource(R.string.greeting))
-                Text(text = name)
+                Text(text = name, style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.ExtraBold))
             }
             OutlinedButton(onClick = {
                 expanded = !expanded
@@ -88,11 +91,12 @@ fun Greeting(name: String) {
     }
 }
 
+@Preview(showBackground = true, widthDp = 320, uiMode = UI_MODE_NIGHT_YES, name = "DefaultPreviewInDarkMode")
 @Preview(widthDp = 320)
 @Composable
 fun DefaultPreview() {
-    ExploreComposeTheme() {
-        MyApp()
+    BasicsCodelabTheme {
+        Greetings()
     }
 }
 
