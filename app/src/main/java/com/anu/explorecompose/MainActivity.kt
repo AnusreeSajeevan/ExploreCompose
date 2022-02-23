@@ -1,16 +1,17 @@
 package com.anu.explorecompose
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement.Vertical
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -19,12 +20,14 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.anu.explorecompose.domain.Message
 import com.anu.explorecompose.ui.theme.BasicsCodelabTheme
-import com.anu.explorecompose.ui.theme.ExploreComposeTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -106,14 +109,14 @@ fun Greeting(name: String) {
     }
 }
 
-@Preview(showBackground = true, widthDp = 320, uiMode = UI_MODE_NIGHT_YES, name = "DefaultPreviewInDarkMode")
+/*@Preview(showBackground = true, widthDp = 320, uiMode = UI_MODE_NIGHT_YES, name = "DefaultPreviewInDarkMode")
 @Preview(widthDp = 320)
 @Composable
 fun DefaultPreview() {
     BasicsCodelabTheme {
         Greetings()
     }
-}
+}*/
 
 @Composable
 fun OnboardingScreen(onContinueClicked: () -> Unit) {
@@ -129,14 +132,41 @@ fun OnboardingScreen(onContinueClicked: () -> Unit) {
             Button(modifier = Modifier.padding(vertical = 24.dp), onClick = onContinueClicked) {
                 Text("Continue")
             }
+            Button(modifier = Modifier.padding(vertical = 24.dp), onClick = {  }) {
+                Text("Continue")
+            }
         }
     }
 }
 
+@Composable
+fun createChatView() {
+    MessageCard(Message("Anusree", "Android Dev"))
+}
+
+@Composable
+fun MessageCard(message: Message) {
+    Row(modifier = Modifier.padding(8.dp)){
+        Image(painter = painterResource(id = R.drawable.img), contentDescription = "user",
+            modifier = Modifier.size(30.dp))
+        Column {
+            Text(text = message.author)
+            Text(text = message.message)
+        }
+    }
+}
+
+@Preview(showBackground = true, heightDp = 200, widthDp = 200)
+@Composable
+fun MessageWindowPreview() {
+    createChatView()
+}
+
+/*
 @Preview(showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
 fun OnboardingPreview() {
     ExploreComposeTheme() {
         OnboardingScreen(onContinueClicked = {})
     }
-}
+}*/
