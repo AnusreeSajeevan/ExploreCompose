@@ -4,6 +4,7 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
@@ -11,6 +12,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
@@ -63,30 +67,41 @@ fun Greeting(name: String) {
         mutableStateOf(false)
     }
 
-    val extraPadding by animateDpAsState(targetValue = if (expanded) 56.dp else 0.dp,
-    animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy, stiffness = Spring.StiffnessLow))
-
     Surface(
         color = MaterialTheme.colors.primary,
         modifier = Modifier
             .padding(vertical = 4.dp, horizontal = 8.dp)
             .fillMaxWidth(1f)
     ) {
-        Row(Modifier.padding(24.dp)) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = stringResource(R.string.greeting))
-                Text(text = name, style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.ExtraBold))
-            }
-            OutlinedButton(onClick = {
-                expanded = !expanded
-            }, modifier = Modifier.padding(bottom = extraPadding.coerceAtLeast(0.dp))) {
-                Text(
-                    text = stringResource(
-                        if (expanded) R.string.show_less_button else
-                            R.string.show_more_button
+        Column(modifier = Modifier.animateContentSize(
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioMediumBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        )){
+            Row(Modifier.padding(24.dp)) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(text = stringResource(R.string.greeting))
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.h3.copy(fontWeight = FontWeight.ExtraBold)
                     )
-                )
+                }
+
+                IconButton(onClick = {expanded = !expanded}) {
+                    Icon(
+                        imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                        contentDescription = if (expanded) {
+                            stringResource(R.string.show_less_button)
+                        } else {
+                            stringResource(R.string.show_more_button)
+                        }
+
+                    )
+                }
             }
+            if (expanded)
+                Text(text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut dolor nisl", modifier = Modifier.padding(16.dp))
         }
     }
 }
