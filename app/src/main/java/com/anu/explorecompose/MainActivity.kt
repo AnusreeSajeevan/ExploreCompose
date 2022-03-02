@@ -8,6 +8,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,8 +44,8 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MyApp() {
-    var shouldShowChatWindow by rememberSaveable { mutableStateOf(false)}
-    var shouldShowGreetings by rememberSaveable { mutableStateOf(false)}
+    var shouldShowChatWindow by rememberSaveable { mutableStateOf(false) }
+    var shouldShowGreetings by rememberSaveable { mutableStateOf(false) }
     when {
         shouldShowGreetings -> {
             Greetings()
@@ -61,7 +62,7 @@ private fun MyApp() {
 }
 
 @Composable
-fun Greetings(names: List<String> = List(1000) {"$it"} ) {
+fun Greetings(names: List<String> = List(1000) { "$it" }) {
     BasicsCodelabTheme {
         Surface(
             color = MaterialTheme.colors.background
@@ -88,12 +89,14 @@ fun Greeting(name: String) {
             .padding(vertical = 4.dp, horizontal = 8.dp)
             .fillMaxWidth(1f)
     ) {
-        Column(modifier = Modifier.animateContentSize(
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessLow
+        Column(
+            modifier = Modifier.animateContentSize(
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioMediumBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
             )
-        )){
+        ) {
             Row(Modifier.padding(24.dp)) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = stringResource(R.string.greeting))
@@ -103,7 +106,7 @@ fun Greeting(name: String) {
                     )
                 }
 
-                IconButton(onClick = {expanded = !expanded}) {
+                IconButton(onClick = { expanded = !expanded }) {
                     Icon(
                         imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
                         contentDescription = if (expanded) {
@@ -116,7 +119,10 @@ fun Greeting(name: String) {
                 }
             }
             if (expanded)
-                Text(text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut dolor nisl", modifier = Modifier.padding(16.dp))
+                Text(
+                    text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut dolor nisl",
+                    modifier = Modifier.padding(16.dp)
+                )
         }
     }
 }
@@ -159,15 +165,21 @@ fun createChatView() {
 @Composable
 fun MessageCard(message: Message) {
     ExploreComposeTheme {
-        Row(modifier = Modifier.padding(8.dp)){
-            Image(painter = painterResource(id = R.drawable.img), contentDescription = "user",
+        Row(modifier = Modifier.padding(8.dp)) {
+            Image(
+                painter = painterResource(id = R.drawable.img), contentDescription = "user",
                 modifier = Modifier
                     .size(30.dp)
                     .clip(CircleShape)
-                    .border(1.dp, MaterialTheme.colors.surface, CircleShape))
-            Column {
-                Text(text = message.author, color = MaterialTheme.colors.surface)
-                Text(text = message.message)
+                    .border(1.dp, MaterialTheme.colors.surface, CircleShape)
+            )
+            Column(modifier = Modifier.padding(start = 8.dp)) {
+                Text(text = message.author, color = MaterialTheme.colors.surface,
+                style = MaterialTheme.typography.subtitle2)
+
+                Surface(shape = MaterialTheme.shapes.medium) {
+                    Text(text = message.message, style = MaterialTheme.typography.body2, modifier = Modifier.padding(4.dp))
+                }
             }
         }
     }
