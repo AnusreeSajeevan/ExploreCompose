@@ -1,5 +1,6 @@
 package com.anu.explorecompose
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -44,18 +45,20 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MyApp() {
-    var shouldShowChatWindow by rememberSaveable { mutableStateOf(false) }
-    var shouldShowGreetings by rememberSaveable { mutableStateOf(false) }
-    when {
-        shouldShowGreetings -> {
-            Greetings()
-        }
-        shouldShowChatWindow -> {
-            createChatView()
-        }
-        else -> {
-            OnboardingScreen(onContinueClicked = { shouldShowGreetings = true }) {
-                shouldShowChatWindow = true
+    ExploreComposeTheme {
+        var shouldShowChatWindow by rememberSaveable { mutableStateOf(false) }
+        var shouldShowGreetings by rememberSaveable { mutableStateOf(false) }
+        when {
+            shouldShowGreetings -> {
+                Greetings()
+            }
+            shouldShowChatWindow -> {
+                createChatView()
+            }
+            else -> {
+                OnboardingScreen(onContinueClicked = { shouldShowGreetings = true }) {
+                    shouldShowChatWindow = true
+                }
             }
         }
     }
@@ -63,14 +66,12 @@ private fun MyApp() {
 
 @Composable
 fun Greetings(names: List<String> = List(1000) { "$it" }) {
-    BasicsCodelabTheme {
-        Surface(
-            color = MaterialTheme.colors.background
-        ) {
-            LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
-                items(items = names) { name ->
-                    Greeting(name)
-                }
+    Surface(
+        color = MaterialTheme.colors.background
+    ) {
+        LazyColumn(modifier = Modifier.padding(vertical = 4.dp)) {
+            items(items = names) { name ->
+                Greeting(name)
             }
         }
     }
@@ -127,15 +128,6 @@ fun Greeting(name: String) {
     }
 }
 
-/*@Preview(showBackground = true, widthDp = 320, uiMode = UI_MODE_NIGHT_YES, name = "DefaultPreviewInDarkMode")
-@Preview(widthDp = 320)
-@Composable
-fun DefaultPreview() {
-    BasicsCodelabTheme {
-        Greetings()
-    }
-}*/
-
 @Composable
 fun OnboardingScreen(onContinueClicked: () -> Unit, onChatWindowClicked: () -> Unit) {
     // TODO: This state should be hoisted
@@ -159,7 +151,9 @@ fun OnboardingScreen(onContinueClicked: () -> Unit, onChatWindowClicked: () -> U
 
 @Composable
 fun createChatView() {
-    MessageCard(Message("Anusree", "Android Dev"))
+    ExploreComposeTheme {
+        MessageCard(Message("Anusree", "Android Dev"))
+    }
 }
 
 @Composable
@@ -174,11 +168,17 @@ fun MessageCard(message: Message) {
                     .border(1.dp, MaterialTheme.colors.surface, CircleShape)
             )
             Column(modifier = Modifier.padding(start = 8.dp)) {
-                Text(text = message.author, color = MaterialTheme.colors.surface,
-                style = MaterialTheme.typography.subtitle2)
+                Text(
+                    text = message.author,
+                    style = MaterialTheme.typography.subtitle2
+                )
 
                 Surface(shape = MaterialTheme.shapes.medium) {
-                    Text(text = message.message, style = MaterialTheme.typography.body2, modifier = Modifier.padding(4.dp))
+                    Text(
+                        text = message.message,
+                        style = MaterialTheme.typography.body2,
+                        modifier = Modifier.padding(4.dp)
+                    )
                 }
             }
         }
@@ -188,16 +188,20 @@ fun MessageCard(message: Message) {
 @Preview(showBackground = true, heightDp = 200, widthDp = 200)
 @Composable
 fun MessageWindowPreview() {
-    ExploreComposeTheme {
-        createChatView()
-    }
+    createChatView()
 }
 
-/*
-@Preview(showBackground = true, widthDp = 320, heightDp = 320)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true, heightDp = 200, widthDp = 200)
+@Composable
+fun MessageWindowPreviewDarkMode() {
+    createChatView()
+}
+
+
+@Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
 fun OnboardingPreview() {
-    ExploreComposeTheme() {
-        OnboardingScreen(onContinueClicked = {})
+    ExploreComposeTheme {
+        OnboardingScreen(onContinueClicked = {}, onChatWindowClicked = {})
     }
-}*/
+}
