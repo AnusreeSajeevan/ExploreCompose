@@ -158,7 +158,7 @@ fun createChatView() {
 
 @Composable
 fun MessageCard(message: Message) {
-    Surface(color = MaterialTheme.colors.onSurface) {
+    Surface(color = MaterialTheme.colors.primary) {
         Row(
             modifier = Modifier
                 .padding(8.dp)
@@ -192,13 +192,17 @@ fun MessageCard(message: Message) {
 @Preview(showBackground = true)
 @Composable
 fun MessageWindowPreview() {
-    createChatView()
+    BasicsCodelabTheme {
+        createChatView()
+    }
 }
 
 @Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun MessageWindowPreviewDarkMode() {
-    createChatView()
+    BasicsCodelabTheme {
+        createChatView()
+    }
 }
 
 
