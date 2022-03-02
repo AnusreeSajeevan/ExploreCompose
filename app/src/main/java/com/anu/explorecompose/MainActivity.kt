@@ -7,9 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,18 +17,21 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.anu.explorecompose.domain.Message
+import com.anu.explorecompose.domain.SampleData
 import com.anu.explorecompose.ui.theme.BasicsCodelabTheme
 import com.anu.explorecompose.ui.theme.ExploreComposeTheme
 
@@ -55,7 +56,7 @@ private fun MyApp() {
                 }
             }
             shouldShowChatWindow -> {
-                createChatView()
+                createConversation(SampleData.conversationSample)
             }
             else -> {
                 OnboardingScreen(onContinueClicked = { shouldShowGreetings = true }) {
@@ -152,13 +153,17 @@ fun OnboardingScreen(onContinueClicked: () -> Unit, onChatWindowClicked: () -> U
 }
 
 @Composable
-fun createChatView() {
-        MessageCard(Message("Anusree", "Android Dev"))
+fun createConversation(messages: List<Message>) {
+    LazyColumn {
+        items(items = messages) {
+            MessageCard(Message(it.author, it.message))
+        }
+    }
 }
 
 @Composable
 fun MessageCard(message: Message) {
-    Surface(color = MaterialTheme.colors.primary) {
+//    Surface(color = MaterialTheme.colors.primary) {
         Row(
             modifier = Modifier
                 .padding(8.dp)
@@ -177,7 +182,7 @@ fun MessageCard(message: Message) {
                     color = MaterialTheme.colors.secondaryVariant
                 )
 
-                Surface(shape = MaterialTheme.shapes.medium) {
+                Surface(shape = MaterialTheme.shapes.medium, elevation = 1.dp, color = MaterialTheme.colors.primary) {
                     Text(
                         text = message.message,
                         style = MaterialTheme.typography.body2,
@@ -186,14 +191,14 @@ fun MessageCard(message: Message) {
                 }
             }
         }
-    }
+//    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun MessageWindowPreview() {
     BasicsCodelabTheme {
-        createChatView()
+        createConversation(emptyList())
     }
 }
 
@@ -201,7 +206,7 @@ fun MessageWindowPreview() {
 @Composable
 fun MessageWindowPreviewDarkMode() {
     BasicsCodelabTheme {
-        createChatView()
+        createConversation(emptyList())
     }
 }
 
