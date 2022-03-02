@@ -50,7 +50,9 @@ private fun MyApp() {
         var shouldShowGreetings by rememberSaveable { mutableStateOf(false) }
         when {
             shouldShowGreetings -> {
-                Greetings()
+                BasicsCodelabTheme {
+                    Greetings()
+                }
             }
             shouldShowChatWindow -> {
                 createChatView()
@@ -151,46 +153,49 @@ fun OnboardingScreen(onContinueClicked: () -> Unit, onChatWindowClicked: () -> U
 
 @Composable
 fun createChatView() {
-    MessageCard(Message("Anusree", "Android Dev"))
+        MessageCard(Message("Anusree", "Android Dev"))
 }
 
 @Composable
 fun MessageCard(message: Message) {
-    Row(
-        modifier = Modifier
-            .padding(8.dp)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.img), contentDescription = "user",
+    Surface(color = MaterialTheme.colors.onSurface) {
+        Row(
             modifier = Modifier
-                .size(30.dp)
-                .clip(CircleShape)
-                .border(1.dp, MaterialTheme.colors.surface, CircleShape)
-        )
-        Column(modifier = Modifier.padding(start = 8.dp)) {
-            Text(
-                text = message.author,
-                style = MaterialTheme.typography.subtitle2
+                .padding(8.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.img), contentDescription = "user",
+                modifier = Modifier
+                    .size(30.dp)
+                    .clip(CircleShape)
+                    .border(1.dp, MaterialTheme.colors.secondaryVariant, CircleShape)
             )
-
-            Surface(shape = MaterialTheme.shapes.medium) {
+            Column(modifier = Modifier.padding(start = 8.dp)) {
                 Text(
-                    text = message.message,
-                    style = MaterialTheme.typography.body2,
-                    modifier = Modifier.padding(4.dp)
+                    text = message.author,
+                    style = MaterialTheme.typography.subtitle2,
+                    color = MaterialTheme.colors.secondaryVariant
                 )
+
+                Surface(shape = MaterialTheme.shapes.medium) {
+                    Text(
+                        text = message.message,
+                        style = MaterialTheme.typography.body2,
+                        modifier = Modifier.padding(4.dp)
+                    )
+                }
             }
         }
     }
 }
 
-@Preview(showBackground = true, heightDp = 200, widthDp = 200)
+@Preview(showBackground = true)
 @Composable
 fun MessageWindowPreview() {
     createChatView()
 }
 
-@Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true, heightDp = 200, widthDp = 200)
+@Preview(uiMode = UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 fun MessageWindowPreviewDarkMode() {
     createChatView()
