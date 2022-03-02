@@ -8,10 +8,8 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement.Vertical
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
@@ -20,7 +18,6 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,12 +37,21 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun MyApp() {
-    var shouldShowOnboarding by rememberSaveable { mutableStateOf(true) }
-   if (shouldShowOnboarding) {
-       OnboardingScreen(onContinueClicked = { shouldShowOnboarding = false })
-   } else {
-       Greetings()
-   }
+    var shouldShowChatWindow by rememberSaveable { mutableStateOf(false)}
+    var shouldShowGreetings by rememberSaveable { mutableStateOf(false)}
+    when {
+        shouldShowGreetings -> {
+            Greetings()
+        }
+        shouldShowChatWindow -> {
+            createChatView()
+        }
+        else -> {
+            OnboardingScreen(onContinueClicked = { shouldShowGreetings = true }) {
+                shouldShowChatWindow = true
+            }
+        }
+    }
 }
 
 @Composable
@@ -119,7 +125,7 @@ fun DefaultPreview() {
 }*/
 
 @Composable
-fun OnboardingScreen(onContinueClicked: () -> Unit) {
+fun OnboardingScreen(onContinueClicked: () -> Unit, onChatWindowClicked: () -> Unit) {
     // TODO: This state should be hoisted
 
     Surface {
@@ -132,7 +138,7 @@ fun OnboardingScreen(onContinueClicked: () -> Unit) {
             Button(modifier = Modifier.padding(vertical = 24.dp), onClick = onContinueClicked) {
                 Text("Continue")
             }
-            Button(modifier = Modifier.padding(vertical = 24.dp), onClick = {  }) {
+            Button(modifier = Modifier.padding(vertical = 24.dp), onClick = onChatWindowClicked) {
                 Text("Continue")
             }
         }
