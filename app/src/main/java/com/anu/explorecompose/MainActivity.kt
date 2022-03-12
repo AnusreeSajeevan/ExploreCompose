@@ -4,11 +4,13 @@ import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -25,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -163,7 +166,7 @@ fun createConversation(messages: List<Message>) {
 
 @Composable
 fun MessageCard(message: Message) {
-//    Surface(color = MaterialTheme.colors.primary) {
+    var expanded by rememberSaveable { mutableStateOf(false)}
         Row(
             modifier = Modifier
                 .padding(8.dp)
@@ -175,23 +178,28 @@ fun MessageCard(message: Message) {
                     .clip(CircleShape)
                     .border(1.dp, MaterialTheme.colors.secondaryVariant, CircleShape)
             )
-            Column(modifier = Modifier.padding(start = 8.dp)) {
+            Column(modifier = Modifier
+                .padding(start = 8.dp)
+                .clickable { expanded = !expanded }) {
                 Text(
                     text = message.author,
                     style = MaterialTheme.typography.subtitle2,
                     color = MaterialTheme.colors.secondaryVariant
                 )
 
-                Surface(shape = MaterialTheme.shapes.medium, elevation = 1.dp, color = MaterialTheme.colors.primary) {
+                val surfaceColor: Color by animateColorAsState(if (expanded) MaterialTheme.colors.primary else MaterialTheme.colors.surface)
+                Surface(shape = MaterialTheme.shapes.medium, elevation = 1.dp, color = surfaceColor, modifier = Modifier
+                    .animateContentSize()
+                    .padding(1.dp)) {
                     Text(
                         text = message.message,
                         style = MaterialTheme.typography.body2,
-                        modifier = Modifier.padding(4.dp)
+                        modifier = Modifier.padding(4.dp),
+                        maxLines = if (expanded) Int.MAX_VALUE else 1
                     )
                 }
             }
         }
-//    }
 }
 
 @Preview(showBackground = true)
